@@ -1,4 +1,4 @@
 openvswitchbuild
 ================
 
-Repo wrapper for OpenVSwitch build.
+Repo wrapper for Open vSwitch build.
