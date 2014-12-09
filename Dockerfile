@@ -2,7 +2,7 @@ FROM registry.service.altiscale.com:443/prometheus-6.5.7-201409302345
 RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz
 RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz.sig
 RUN tar xfz autoconf-latest.tar.gz
-WORKDIR /autoconf-2.64/
+WORKDIR /autoconf-2.69/
 RUN ./configure
 RUN make
 RUN make install
@@ -16,6 +16,7 @@ RUN cp openvswitch-*.tar.gz $HOME/rpmbuild/SOURCES
 WORKDIR /tmp
 RUN tar xzf $HOME/rpmbuild/SOURCES/openvswitch-*.tar.gz
 WORKDIR /tmp/openvswitch-2.3.0
-RUN rpmbuild -bb rhel/openvswitch.spec
+RUN rpmbuild -bb --without check rhel/openvswitch.spec
 RUN yum -y install kexec-tools crash kernel-debug
-RUN rpmbuild -bb -D "kversion 3.15.5-15.alti6.x86_64" -D "kflavors default debug" rhel/openvswitch-kmod-rhel6.spec
+RUN cp rhel/openvswitch-kmod.files $HOME/rpmbuild/SOURCES
+RUN rpmbuild -bb -D "kversion 3.15.5-15.alti6.x86_64" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
