@@ -18,7 +18,7 @@ RUN cp openvswitch-*.tar.gz /rpmbuild/SOURCES
 RUN tar xzf ./openvswitch-*.tar.gz
 WORKDIR /root/ovs/openvswitch-2.3.0
 RUN pwd
-RUN rpmbuild -bb --without check rhel/openvswitch.spec
-#RUN sed -i 's/14;/16;/g' ./configure
-#RUN yum -y install kexec-tools crash kernel-debug
-#RUN rpmbuild -bb -D "kversion 3.15.5-15.alti6.x86_64" -D "kflavors default debug kdump" rhel/openvswitch-kmod-rhel6.spec
+RUN cd /root/ovs/openvswitch-2.3.0 && rpmbuild -bb rhel/openvswitch.spec
+RUN sed -i 's/14;/16;/g' ./configure
+RUN yum -y install kexec-tools crash kernel-debug
+RUN rpmbuild -bb -D "kversion 3.15.5-15.alti6.x86_64" -D "kflavors default debug" rhel/openvswitch-kmod-rhel6.spec
