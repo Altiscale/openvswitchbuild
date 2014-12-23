@@ -1,0 +1,10 @@
+FROM registry.service.altiscale.com:443/prometheus-6.5.7-201409302345
+RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz
+RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz.sig
+RUN tar xfz autoconf-latest.tar.gz
+WORKDIR /autoconf-2.69/
+RUN ./configure
+RUN make
+RUN make install
+RUN make check
+CMD echo "autoconf builder"
