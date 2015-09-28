@@ -3,14 +3,14 @@ COPY ovs /root/ovs
 WORKDIR /root/ovs
 RUN yum install -y gcc make python-devel openssl-devel graphviz autoconf automake rpm-build redhat-rpm-config libtool
 RUN ./boot.sh && ./configure && make dist
-RUN mkdir -p $HOME/rpmbuild/SOURCES
-RUN cp openvswitch-*.tar.gz $HOME/rpmbuild/SOURCES
+RUN mkdir -p /root/rpmbuild/SOURCES
+RUN cp openvswitch-*.tar.gz /root/rpmbuild/SOURCES
 WORKDIR /tmp
-RUN tar xzf $HOME/rpmbuild/SOURCES/openvswitch-*.tar.gz
-WORKDIR /tmp/openvswitch-2.3.1
+RUN tar xzf /root/rpmbuild/SOURCES/openvswitch-*.tar.gz
+WORKDIR /tmp/openvswitch-${OVS_VERSION}
 RUN rpmbuild -bb --without check rhel/openvswitch.spec
 RUN yum -y install kexec-tools crash kernel-debug
-RUN cp rhel/openvswitch-kmod.files $HOME/rpmbuild/SOURCES
+RUN cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES
 RUN rpmbuild -bb -D "kversion 4.1.6-26.alti6.x86_64" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
 CMD echo "ovs builder"
 
