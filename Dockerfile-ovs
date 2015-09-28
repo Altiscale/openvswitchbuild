@@ -11,6 +11,6 @@ WORKDIR /tmp/openvswitch-2.3.1
 RUN rpmbuild -bb --without check rhel/openvswitch.spec
 RUN yum -y install kexec-tools crash kernel-debug
 RUN cp rhel/openvswitch-kmod.files $HOME/rpmbuild/SOURCES
-RUN rpmbuild -bb -D "kversion 3.15.5-15.alti6.x86_64" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
+RUN rpmbuild -bb -D "kversion 4.1.6-26.alti6.x86_64" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
 CMD echo "ovs builder"
 
