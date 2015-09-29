@@ -2,7 +2,7 @@ FROM autoconf-env
 COPY ovs /root/ovs
 WORKDIR /root/ovs
 RUN yum install -y gcc make python-devel openssl-devel graphviz autoconf automake rpm-build redhat-rpm-config libtool kabi-whitelists kernel-devel
-#RUN cd /lib/modules && ln -s kabi-current kabi
+RUN cd /lib/modules && ln -s kabi-current kabi
 RUN ./boot.sh && ./configure && make dist
 RUN mkdir -p /root/rpmbuild/SOURCES
 RUN cp openvswitch-*.tar.gz /root/rpmbuild/SOURCES
