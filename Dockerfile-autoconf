@@ -1,4 +1,4 @@
-FROM registry.service.altiscale.com:443/prometheus-6.5.7-201409302345
+FROM ${DOCKER_IMAGE}
 RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz
 RUN wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz.sig
 RUN tar xfz autoconf-latest.tar.gz

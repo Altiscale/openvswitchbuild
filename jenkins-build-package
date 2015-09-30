@@ -1,10 +1,10 @@
 #!/bin/sh
 pushd ${WORKSPACE}
-cp Dockerfile-autoconf Dockerfile
+envsubst < Dockerfile-autoconf > Dockerfile
 sudo docker build -t autoconf .
 container_with_env=`sudo docker run -d -e WORKSPACE=$WORKSPACE -e RELEASE=$BUILD_NUMBER -e PACKAGE_VERSION=$PACKAGE_VERSION -e HOME=/root autoconf`
 sudo docker commit ${container_with_env} autoconf-env
-cp Dockerfile-ovs Dockerfile
+envsubst < Dockerfile-ovs > Dockerfile
 sudo docker build -t ovs .
 CID=`sudo docker run -d ovs true`
 sudo docker cp $CID:/root/rpmbuild/RPMS $PWD
