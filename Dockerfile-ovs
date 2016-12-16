@@ -2,16 +2,23 @@ FROM autoconf-env
 COPY ovs /root/ovs
 WORKDIR /root/ovs
 RUN yum install -y gcc make python-devel openssl-devel graphviz autoconf automake rpm-build redhat-rpm-config libtool kabi-whitelists kernel-devel
-RUN cd /lib/modules && ln -s kabi-current kabi
-RUN ./boot.sh && ./configure && make dist
-RUN mkdir -p /root/rpmbuild/SOURCES
-RUN cp openvswitch-*.tar.gz /root/rpmbuild/SOURCES
-WORKDIR /tmp
-RUN tar xzf /root/rpmbuild/SOURCES/openvswitch-*.tar.gz
-WORKDIR /tmp/openvswitch-${OVS_VERSION}
-RUN rpmbuild -bb --without check rhel/openvswitch.spec
-RUN yum -y install kexec-tools crash kernel-debug
-RUN cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES
-RUN rpmbuild -bb -D "kversion 4.1.6-26.alti6.x86_64" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
-CMD echo "ovs builder"
+RUN wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo
+RUN yum -y install devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++
+RUN source /opt/rh/devtoolset-2/enable && \
+    source /opt/rh/python27/enable && \
+    yum -y remove python27-python-six && \
+    pip2.7 install six && \
+    cd /lib/modules && ln -s kabi-current kabi && \
+    cd /root/ovs && \
+    ./boot.sh && ./configure && make dist && \
+    mkdir -p /root/rpmbuild/SOURCES && \
+    cp openvswitch-*.tar.gz /root/rpmbuild/SOURCES && \
+    cd /tmp && \
+    tar xzf /root/rpmbuild/SOURCES/openvswitch-*.tar.gz && \
+    cd  /tmp/openvswitch-${OVS_VERSION} && \
+    rpmbuild -bb --without check rhel/openvswitch.spec && \
+    yum -y install kexec-tools crash kernel-debug && \
+    cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES && \
+    rpmbuild -bb -D "kversion ${KERNEL_VERSION}" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
+RUN echo "ovs builder"
 
