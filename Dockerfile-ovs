@@ -17,7 +17,7 @@ RUN source /opt/rh/devtoolset-2/enable && \
     cd /tmp && \
     tar xzf /root/rpmbuild/SOURCES/openvswitch-*.tar.gz && \
     cd  /tmp/openvswitch-${OVS_VERSION} && \
-    sed 's/python >= 2.7, python-six/python27-python >= 2.7/' rhel/openvswitch.spec && \
+    sed -i 's/python >= 2.7, python-six/python27-python >= 2.7/' rhel/openvswitch.spec && \
     rpmbuild -bb --without check rhel/openvswitch.spec && \
     yum -y install kexec-tools crash kernel-debug && \
     cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES && \
