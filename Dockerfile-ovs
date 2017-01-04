@@ -3,10 +3,11 @@ COPY ovs /root/ovs
 WORKDIR /root/ovs
 RUN yum install -y gcc make python-devel openssl-devel graphviz autoconf automake rpm-build redhat-rpm-config libtool kabi-whitelists kernel-devel
 RUN wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo
-RUN yum -y install devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++
+RUN yum -y install devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++ python27
 RUN source /opt/rh/devtoolset-2/enable && \
     source /opt/rh/python27/enable && \
     yum -y remove python27-python-six && \
+    easy_install-2.7 pip && \
     pip2.7 install six && \
     cd /lib/modules && ln -s kabi-current kabi && \
     cd /root/ovs && \
@@ -16,6 +17,7 @@ RUN source /opt/rh/devtoolset-2/enable && \
     cd /tmp && \
     tar xzf /root/rpmbuild/SOURCES/openvswitch-*.tar.gz && \
     cd  /tmp/openvswitch-${OVS_VERSION} && \
+    sed 's/python >= 2.7, python-six/python27-python >= 2.7/' rhel/openvswitch.spec && \
     rpmbuild -bb --without check rhel/openvswitch.spec && \
     yum -y install kexec-tools crash kernel-debug && \
     cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES && \
