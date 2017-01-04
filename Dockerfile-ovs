@@ -22,6 +22,7 @@ RUN source /opt/rh/devtoolset-2/enable && \
     rpmbuild -bb --without check rhel/openvswitch.spec && \
     yum -y install kexec-tools crash kernel-debug && \
     cp rhel/openvswitch-kmod.files /root/rpmbuild/SOURCES && \
+    sed -i "s/Release:        1%{?dist}/Release:        ${BUILD_NUMBER}/" rhel/openvswitch-kmod-rhel6.spec && \
     rpmbuild -bb -D "kversion ${KERNEL_VERSION}" -D "kflavors default" rhel/openvswitch-kmod-rhel6.spec
 RUN echo "ovs builder"
 
